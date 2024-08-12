@@ -3,8 +3,6 @@ import numpy as np
 import cv2
 from scipy.interpolate import UnivariateSpline, interp1d
 import matplotlib.pyplot as plt
-from image2polyline import extract_pixel_data
-
 
 # Load data into a DataFrame
 df = pd.read_csv("trash/tc/occlusion2.csv", header=None, names=['Curve', 'Shape', 'X', 'Y'])
@@ -190,11 +188,13 @@ for curve_id, group in curves:
 
 # Combine all images into one large image
 combined_image = combine_images(images, positions, width=1000, height=1000)
-
-cv2.imwrite("master_folder\\utils\\output\\task1\\combined_shapes.png", combined_image)
-
 plt.imshow(combined_image, cmap='gray')
 plt.axis('off')
 plt.show()
 
-extract_pixel_data("master_folder\\utils\\output\\algo4\\combined_shapes.png")
+cv2.imwrite("master_folder\\utils\\output\\algo4\\combined_shapes.png", combined_image)
+
+# Save the coordinates to a CSV file
+columns = ["ShapeType", "CurveID", "X", "Y"]
+df_output = pd.DataFrame(output_data, columns=columns)
+df_output.to_csv("shapes_coordinates.csv", index=False)
